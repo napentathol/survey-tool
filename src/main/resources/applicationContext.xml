@@ -5,14 +5,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- Database Configuration -->
-    <import resource="./database/DataSource.xml"/>
-    <import resource="./database/Hibernate.xml"/>
+    <import resource="database/DataSource.xml"/>
+    <import resource="database/Hibernate.xml"/>
 
     <!-- Auto scan the components -->
     <context:component-scan base-package="us.sodiumlabs.survey" />
 
     <!-- DAOS -->
+    <bean id="defaultSurveyDAO" class="us.sodiumlabs.survey.daos.impl.DefaultSurveyDAO">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
 
     <!-- Services -->
+    <bean id="defaultSurveyService" class="us.sodiumlabs.survey.services.impl.DefaultSurveyService">
+        <constructor-arg ref="defaultSurveyDAO"/>
+    </bean>
 
 </beans>

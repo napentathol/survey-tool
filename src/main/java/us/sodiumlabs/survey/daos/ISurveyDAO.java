@@ -27,4 +27,6 @@ public interface ISurveyDAO {
     Survey getSurveyById(Serializable id);
 
     List<Survey> getAllSurveys();
+
+    void save(Survey survey);
 }

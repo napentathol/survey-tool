@@ -26,7 +26,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "question")
 public class Question {
 
-    private enum EQuestionType {
+    public enum EQuestionType {
         TEXT
     }
 
@@ -59,6 +59,7 @@ public class Question {
     /**
      * @return the Survey this question belongs to.
      */
+    @JoinColumn(name = "survey_id")
     @ManyToOne
     public Survey getSurvey() {
         return _survey;

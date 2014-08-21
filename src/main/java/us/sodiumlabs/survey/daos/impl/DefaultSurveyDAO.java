@@ -1,8 +1,6 @@
 package us.sodiumlabs.survey.daos.impl;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import us.sodiumlabs.survey.daos.ISurveyDAO;
@@ -39,6 +37,11 @@ public class DefaultSurveyDAO extends HibernateDaoSupport implements ISurveyDAO 
 
     @Override
     public List<Survey> getAllSurveys() {
-        return null;
+        return (getHibernateTemplate().findByCriteria(DetachedCriteria.forClass(Survey.class)));
+    }
+
+    @Override
+    public void save(Survey survey) {
+        getHibernateTemplate().saveOrUpdate(survey);
     }
 }

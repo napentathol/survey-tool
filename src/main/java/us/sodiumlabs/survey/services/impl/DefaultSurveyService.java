@@ -46,15 +46,19 @@ public class DefaultSurveyService implements ISurveyService{
 
     @Override
     public boolean receiveAnswerToQuestions(Map<Question, String> questionAnswerMap) {
-        questionAnswerMap.forEach((Question q, String s) -> {
-            System.out.println(
-                "Question was answered" +
+        for (Map.Entry<Question,String> questionAnswer : questionAnswerMap.entrySet()) {
+            printQuestionAnswers(questionAnswer.getKey(), questionAnswer.getValue());
+        }
+
+        return true;
+    }
+
+    private void printQuestionAnswers(Question q, String s) {
+        System.out.println(
+            "Question was answered" +
                 "\n\tid: " + q.getId() +
                 "\n\tlabel: " + q.getLabel() +
                 "\n\tanswer: " + s + "\n"
-            );
-        });
-
-        return true;
+        );
     }
 }

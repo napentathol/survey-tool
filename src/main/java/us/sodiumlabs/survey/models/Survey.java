@@ -36,7 +36,7 @@ public class Survey implements Serializable {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "survey_id", unique = true, nullable = false)
     public Integer getId() {
         return _id;
     }
@@ -50,7 +50,7 @@ public class Survey implements Serializable {
     }
 
 
-    @OneToMany(mappedBy="questionId")
+    @OneToMany(mappedBy="survey")
     @OrderBy("id")
     public List<Question> getQuestions() {
         return _questions;
