@@ -1,5 +1,6 @@
 package us.sodiumlabs.survey.services.impl;
 
+import org.springframework.transaction.annotation.Transactional;
 import us.sodiumlabs.survey.daos.ISurveyDAO;
 import us.sodiumlabs.survey.models.Question;
 import us.sodiumlabs.survey.models.Survey;
@@ -26,6 +27,7 @@ import java.util.Map;
  * <p/>
  * Created by Alex on 8/18/2014.
  */
+@Transactional
 public class DefaultSurveyService implements ISurveyService{
 
     private final ISurveyDAO _surveyDAO;
@@ -36,7 +38,13 @@ public class DefaultSurveyService implements ISurveyService{
 
     @Override
     public List<Survey> getAllSurveys() {
-        return _surveyDAO.getAllSurveys();
+        List<Survey> allSurveys = _surveyDAO.getAllSurveys();
+
+        for(Survey survey : allSurveys){
+            survey.getQuestions().size();
+        }
+
+        return allSurveys;
     }
 
     @Override

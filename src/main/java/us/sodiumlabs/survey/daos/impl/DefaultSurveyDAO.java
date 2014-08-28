@@ -1,9 +1,11 @@
 package us.sodiumlabs.survey.daos.impl;
 
+import org.hibernate.FlushMode;
 import org.hibernate.criterion.DetachedCriteria;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 import org.springframework.transaction.annotation.Transactional;
 import us.sodiumlabs.survey.daos.ISurveyDAO;
+import us.sodiumlabs.survey.models.Question;
 import us.sodiumlabs.survey.models.Survey;
 
 import java.io.Serializable;
@@ -32,16 +34,20 @@ public class DefaultSurveyDAO extends HibernateDaoSupport implements ISurveyDAO 
 
     @Override
     public Survey getSurveyById(final Serializable id) {
-        return (Survey)(getHibernateTemplate().get(Survey.class, id));
+        return getHibernateTemplate().get(Survey.class, id);
     }
 
     @Override
     public List<Survey> getAllSurveys() {
-        return (getHibernateTemplate().findByCriteria(DetachedCriteria.forClass(Survey.class)));
+        return (List<Survey>)(getHibernateTemplate().findByCriteria(DetachedCriteria.forClass(Survey.class)));
     }
 
     @Override
     public void save(Survey survey) {
         getHibernateTemplate().saveOrUpdate(survey);
+
+        for(Question question : survey.getQuestions()){
+            getHibernateTemplate().saveOrUpdate(question);
+        }
     }
 }
