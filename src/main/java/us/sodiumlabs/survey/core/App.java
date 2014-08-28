@@ -32,14 +32,27 @@ public class App {
 
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 
-        loadSurveys(context);
+        loadSurveysIfNotLoaded(context);
 
         printContext(context);
+    }
+
+    private static void loadSurveysIfNotLoaded(ApplicationContext context) {
+        ISurveyDAO dao = (ISurveyDAO)context.getBean("defaultSurveyDAO");
+
+        if(dao.getAllSurveys().isEmpty()){
+            loadSurveys(context);
+        }
     }
 
     private static void loadSurveys(ApplicationContext context) {
         ISurveyDAO dao = (ISurveyDAO)context.getBean("defaultSurveyDAO");
 
+        dao.save(loadIceCreamSurvey(context));
+        dao.save(loadSuperheroSurvey(context));
+    }
+
+    private static Survey loadIceCreamSurvey(ApplicationContext context) {
         final Survey iceCream = new Survey();
         iceCream.setName("Ice Cream Survey");
 
@@ -55,7 +68,26 @@ public class App {
 
         iceCream.setQuestions(Arrays.asList(flavor,timesPerWeek));
 
-        dao.save(iceCream);
+        return iceCream;
+    }
+
+    private static Survey loadSuperheroSurvey(ApplicationContext context) {
+        final Survey superhero = new Survey();
+        superhero.setName("Superhero Survey");
+
+        final Question who = new Question();
+        who.setLabel("Who is your favorite superhero?");
+        who.setType(Question.EQuestionType.TEXT);
+        who.setSurvey(superhero);
+
+        final Question why = new Question();
+        why.setLabel("Explain why?");
+        why.setType(Question.EQuestionType.TEXT);
+        why.setSurvey(superhero);
+
+        superhero.setQuestions(Arrays.asList(who, why));
+
+        return superhero;
     }
 
     public static void printContext(final ApplicationContext context){
@@ -63,9 +95,7 @@ public class App {
 
         System.out.println("Begin printing context:\n\n");
 
-        for(final Survey survey : service.getAllSurveys()){
-            printSurvey(survey);
-        }
+        service.getAllSurveys().forEach(us.sodiumlabs.survey.core.App::printSurvey);
 
         System.out.println("End context print.");
     }
@@ -76,9 +106,7 @@ public class App {
                 "\n\t and name: " + survey.getName() + "\n\n"
         );
 
-        for(final Question question : survey.getQuestions()) {
-            printQuestion(question);
-        }
+        survey.getQuestions().forEach(us.sodiumlabs.survey.core.App::printQuestion);
 
         System.out.println("End survey print.");
     }
